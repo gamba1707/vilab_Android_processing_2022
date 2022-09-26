@@ -1,13 +1,20 @@
 package com.example.omata.vilab_processing;
 
+import static androidx.core.app.ActivityCompat.startActivityForResult;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.view.MotionEvent;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +54,22 @@ public class Sketch extends PApplet {
     public void setup() {//lateStartみたいな？
         background(255);
         frameRate(60);
+
+        /** Settings for overlay view */
+        private var layoutParams = WindowManager.LayoutParams(
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,  // Overlay レイヤに表示
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE  // フォーカスを奪わない
+                or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,  // 画面外への拡張を許可
+                PixelFormat.TRANSLUCENT
+        )
+
+        fun showAsOverlay() {
+            windowManager.addView(myView, layoutParams)
+        }
+
+
         for (int i = 0; i < points.length; i++) {
             points[i] = new PVector();
             points2[i] = new PVector();
